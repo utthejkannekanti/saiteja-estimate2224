@@ -1,5 +1,3 @@
-<!-- // esrtimateslip2224 -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -197,6 +195,25 @@ input:focus,select:focus{border-color:var(--gold-rich);box-shadow:0 0 0 3px rgba
 .modal-hint strong{color:var(--gold-deep)}
 .modal-hint.success{background:#f0fff6;border:1px solid rgba(37,211,102,.25)}
 
+/* GIVEN GOLD */
+.toggle-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.toggle-label{font-size:14px;font-weight:500;color:var(--text-body)}
+.toggle{position:relative;width:48px;height:26px;cursor:pointer;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-track{position:absolute;inset:0;background:rgba(201,151,28,.25);border-radius:13px;transition:background .22s}
+.toggle input:checked+.toggle-track{background:linear-gradient(135deg,var(--gold-bright),var(--gold-rich))}
+.toggle-knob{position:absolute;top:3px;left:3px;width:20px;height:20px;background:var(--white);
+  border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.18);transition:transform .22s}
+.toggle input:checked~.toggle-knob{transform:translateX(22px)}
+.given-gold-body{display:none;margin-top:4px}
+.given-gold-body.open{display:block}
+.gg-entry{background:var(--gold-pale);border:1.5px solid rgba(201,151,28,.22);
+  border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:8px}
+.gg-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gg-summary{background:rgba(39,174,96,.08);border:1.5px solid rgba(39,174,96,.25);
+  border-radius:var(--radius-sm);padding:10px 14px;margin-top:8px;font-size:13px;color:#1E8449;line-height:1.7}
+.gg-summary strong{color:#145A32}
+
 /* PRINT */
 @media print{
   body{background:white}
@@ -303,6 +320,26 @@ input:focus,select:focus{border-color:var(--gold-rich);box-shadow:0 0 0 3px rgba
       </div>
       <div style="margin-top:10px;padding:9px 12px;background:var(--gold-pale);border-radius:8px;font-size:12px;color:var(--text-muted);border-left:3px solid var(--gold-bright)">
         💡 Making Charge &amp; Stone Charge are entered per item above
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Customer Given Gold</div>
+      <div class="toggle-row">
+        <label class="toggle">
+          <input type="checkbox" id="ggToggle" onchange="toggleGivenGold()">
+          <span class="toggle-track"></span>
+          <span class="toggle-knob"></span>
+        </label>
+        <span class="toggle-label">Customer is giving gold</span>
+      </div>
+      <div class="given-gold-body" id="gg-body">
+        <div id="gg-entries"></div>
+        <button class="btn-add" onclick="addGGEntry()" style="margin-top:6px">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+          Add Gold Entry
+        </button>
+        <div class="gg-summary" id="gg-summary" style="display:none"></div>
       </div>
     </div>
 
@@ -466,6 +503,76 @@ function addItem() {
 }
 function removeItem(id) { const e=document.getElementById('item-'+id); if(e)e.remove(); }
 
+// ─── GIVEN GOLD ─────────────────────────────────────────────────────────────
+let ggCount = 0;
+const purityMap = {'24K':24,'22K':22,'20K':20,'18K':18,'14K':14};
+
+function toggleGivenGold() {
+  const open = document.getElementById('ggToggle').checked;
+  document.getElementById('gg-body').classList.toggle('open', open);
+  if (open && document.querySelectorAll('[id^="gg-entry-"]').length === 0) addGGEntry();
+  updateGGSummary();
+}
+
+function addGGEntry() {
+  ggCount++;
+  const id = ggCount;
+  const div = document.createElement('div');
+  div.className = 'gg-entry animate-in'; div.id = 'gg-entry-' + id;
+  div.innerHTML = `
+    <div class="item-header">
+      <span class="item-num">Gold ${id}</span>
+      <button class="btn-remove" onclick="removeGGEntry(${id})">✕</button>
+    </div>
+    <div class="gg-grid">
+      <div class="form-group"><label>Weight (grams)</label>
+        <input type="number" id="ggwt-${id}" placeholder="e.g. 20" inputmode="decimal" step="0.001" oninput="updateGGSummary()">
+      </div>
+      <div class="form-group"><label>Purity</label>
+        <select id="ggpur-${id}" onchange="updateGGSummary()">
+          <option value="24">24K (99.9%)</option>
+          <option value="22" selected>22K (91.6%)</option>
+          <option value="20">20K (83.3%)</option>
+          <option value="18">18K (75.0%)</option>
+          <option value="14">14K (58.3%)</option>
+        </select>
+      </div>
+    </div>`;
+  document.getElementById('gg-entries').appendChild(div);
+  updateGGSummary();
+}
+
+function removeGGEntry(id) {
+  const e = document.getElementById('gg-entry-' + id); if (e) e.remove();
+  updateGGSummary();
+}
+
+function getGivenGoldData() {
+  const entries = [];
+  document.querySelectorAll('[id^="gg-entry-"]').forEach(el => {
+    const id = el.id.split('-')[2];
+    const wt = parseFloat(document.getElementById('ggwt-' + id)?.value) || 0;
+    const pur = parseFloat(document.getElementById('ggpur-' + id)?.value) || 22;
+    if (wt > 0) entries.push({ weight: wt, purity: pur, pureGold: wt * (pur / 24) });
+  });
+  return entries;
+}
+
+function updateGGSummary() {
+  const sumEl = document.getElementById('gg-summary');
+  if (!document.getElementById('ggToggle').checked) { sumEl.style.display = 'none'; return; }
+  const entries = getGivenGoldData();
+  if (entries.length === 0) { sumEl.style.display = 'none'; return; }
+  const totalPure = entries.reduce((s, e) => s + e.pureGold, 0);
+  let html = '';
+  entries.forEach(e => {
+    html += `${e.weight.toFixed(3)}g × ${e.purity}K (${(e.purity/24*100).toFixed(1)}%) = <strong>${e.pureGold.toFixed(3)}g pure</strong><br>`;
+  });
+  html += `<strong>Total Pure Gold (24K): ${totalPure.toFixed(3)}g</strong>`;
+  sumEl.innerHTML = html;
+  sumEl.style.display = 'block';
+}
+
 // ─── CALCULATE ───────────────────────────────────────────────────────────────
 function calculate() {
   const itemEls = document.querySelectorAll('[id^="item-"]');
@@ -503,7 +610,15 @@ function calculate() {
   const netGold=grossTotal-stoneTotal;
   const wastageWt=netGold*(wastageP/100);
   const chargeWt=netGold+wastageWt;
-  const goldValue=chargeWt*activeRate;
+
+  // Given gold
+  const ggEnabled = document.getElementById('ggToggle').checked;
+  const ggEntries = ggEnabled ? getGivenGoldData() : [];
+  const ggTotalPure = ggEntries.reduce((s,e) => s + e.pureGold, 0);
+  const remainingGold = Math.max(chargeWt - ggTotalPure, 0);
+  const hasGivenGold = ggEnabled && ggTotalPure > 0;
+
+  const goldValue = remainingGold * activeRate;
   const grandRaw=goldValue+totalMaking+totalStoneCh-discount;
   const grandRounded=Math.round(grandRaw);
   const hasStone=stoneTotal>0;
@@ -544,7 +659,14 @@ function calculate() {
   ch+=row('Net Gold Weight',netGold.toFixed(3)+' g',true);
   ch+=row(`Wastage ${wastageP}%`,'= '+wastageWt.toFixed(3)+' g');
   ch+=row('Charge Weight',chargeWt.toFixed(3)+' g',true);
-  ch+=`<div class="mul-line">${chargeWt.toFixed(3)} g × ₹${fmt(activeRate.toFixed(2))} = ₹${fmt(goldValue.toFixed(2))}</div>`;
+  if(hasGivenGold){
+    ggEntries.forEach(e=>{
+      ch+=`<div class="calc-row"><span class="cr-label">Given ${e.purity}K Gold (${e.weight.toFixed(3)}g × ${(e.purity/24*100).toFixed(1)}%)</span><span class="cr-val" style="color:#27AE60">= ${e.pureGold.toFixed(3)} g pure</span></div>`;
+    });
+    ch+=row('Total Given Pure Gold','− '+ggTotalPure.toFixed(3)+' g');
+    ch+=row('Remaining Gold',remainingGold.toFixed(3)+' g',true);
+  }
+  ch+=`<div class="mul-line">${remainingGold.toFixed(3)} g × ₹${fmt(activeRate.toFixed(2))} = ₹${fmt(goldValue.toFixed(2))}</div>`;
   ch+=row('Gold Value','₹'+fmt(goldValue.toFixed(2)),true);
   document.getElementById('r-calc').innerHTML=ch;
 
@@ -558,7 +680,8 @@ function calculate() {
   document.getElementById('r-date').textContent=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
 
   window._slip={custName,custMob,itemData,grossTotal,stoneTotal,netGold,wastageP,wastageWt,
-    chargeWt,activeRate,goldValue,totalMaking,totalStoneCh,discount,grandRounded,hasStone,hasMaking,hasStoneCh};
+    chargeWt,activeRate,goldValue,totalMaking,totalStoneCh,discount,grandRounded,hasStone,hasMaking,hasStoneCh,
+    hasGivenGold,ggEntries,ggTotalPure,remainingGold};
   document.getElementById('input-section').style.display='none';
   document.getElementById('result-section').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
@@ -579,6 +702,11 @@ function resetAll(){
     const e=document.getElementById(id);if(e)e.value='';
   });
   document.getElementById('items-list').innerHTML='';
+  document.getElementById('gg-entries').innerHTML='';
+  document.getElementById('ggToggle').checked=false;
+  document.getElementById('gg-body').classList.remove('open');
+  document.getElementById('gg-summary').style.display='none';
+  ggCount=0;
   itemCount=0; setMode('24k');
   document.getElementById('result-section').style.display='none';
   document.getElementById('input-section').style.display='block';
@@ -591,7 +719,8 @@ function drawSlip(d) {
   const C={dark:'#1A1208',dm:'#3D2E0A',gb:'#E8B94A',gl:'#F5D97A',gp:'#FDF3D0',
     gd:'#8B6914',cream:'#FFFDF5',w:'#FFFFFF',mu:'#7A6235',bo:'#3A2C0D',gr:'#27AE60'};
   const HH=160,CH=76,SH=28,RH=34,CALCH=30,MULH=42,TOTH=74,FH=54,GAP=16;
-  const cRows=(d.hasStone?3:1)+2;
+  const ggRows = d.hasGivenGold ? (d.ggEntries.length + 2) : 0; // entries + total + remaining
+  const cRows=(d.hasStone?3:1)+2+ggRows;
   const charN=(d.totalMaking>0?1:0)+(d.totalStoneCh>0?1:0)+(d.discount>0?1:0);
   const calcBH=cRows*CALCH+MULH+30;
   const H=HH+GAP+CH+GAP+SH+(d.itemData.length+1)*RH+14+GAP+calcBH+GAP
@@ -705,7 +834,21 @@ function drawSlip(d) {
   cr('Net Gold Weight',d.netGold.toFixed(3)+' g',true);
   cr(`Wastage ${d.wastageP}%`,'= '+d.wastageWt.toFixed(3)+' g');
   cr('Charge Weight',d.chargeWt.toFixed(3)+' g',true);
-  mr(`${d.chargeWt.toFixed(3)} g  ×  ₹${fmt(d.activeRate.toFixed(2))}  =  ₹${fmt(d.goldValue.toFixed(2))}`);
+  if(d.hasGivenGold){
+    d.ggEntries.forEach(e=>{
+      tx(`Given ${e.purity}K Gold (${e.weight.toFixed(3)}g × ${(e.purity/24*100).toFixed(1)}%)`,PAD+16,y+20,'400 13.5px sans-serif',C.mu);
+      tx('= '+e.pureGold.toFixed(3)+' g pure',PAD+COL-16,y+20,'400 13.5px sans-serif',C.gr,'right');
+      y+=CALCH;
+    });
+    tx('Total Given Pure Gold',PAD+16,y+20,'400 13.5px sans-serif',C.mu);
+    tx('− '+d.ggTotalPure.toFixed(3)+' g',PAD+COL-16,y+20,'400 13.5px sans-serif',C.gr,'right');
+    y+=CALCH;
+    tx('Remaining Gold',PAD+16,y+20,'600 13.5px sans-serif',C.gd);
+    tx(d.remainingGold.toFixed(3)+' g',PAD+COL-16,y+20,'600 13.5px sans-serif',C.gd,'right');
+    hl(PAD+14,y+27,PAD+COL-14,'rgba(201,151,28,.15)');
+    y+=CALCH;
+  }
+  mr(`${d.remainingGold.toFixed(3)} g  ×  ₹${fmt(d.activeRate.toFixed(2))}  =  ₹${fmt(d.goldValue.toFixed(2))}`);
   cr('Gold Value','₹'+fmt(d.goldValue.toFixed(2)),true);
   y+=8;
 
