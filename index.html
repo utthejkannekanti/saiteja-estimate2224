@@ -1,0 +1,834 @@
+// esrtimateslip2224
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sai Teja Jewellery Works – Estimate Slip</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold-deep:#8B6914; --gold-rich:#C9971C; --gold-bright:#E8B94A;
+  --gold-light:#F5D97A; --gold-pale:#FDF3D0; --cream:#FFFDF5;
+  --dark:#1A1208; --dark-mid:#3D2E0A; --text-body:#3A2C0D; --text-muted:#7A6235;
+  --white:#FFFFFF; --radius:16px; --radius-sm:10px;
+  --shadow-card:0 2px 16px rgba(139,105,20,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);min-height:100vh;
+  background-image:radial-gradient(ellipse at 10% 0%,rgba(232,185,74,.13) 0%,transparent 55%),
+    radial-gradient(ellipse at 90% 100%,rgba(201,151,28,.10) 0%,transparent 50%);
+  color:var(--text-body)}
+
+/* HEADER */
+.header{background:linear-gradient(135deg,var(--dark) 0%,var(--dark-mid) 60%,#5C3D0A 100%);
+  color:var(--gold-bright);text-align:center;padding:28px 20px 22px;position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(45deg,transparent,transparent 18px,rgba(232,185,74,.04) 18px,rgba(232,185,74,.04) 19px)}
+.header-ornament{font-size:11px;letter-spacing:5px;color:var(--gold-light);text-transform:uppercase;opacity:.8;margin-bottom:4px}
+.header h1{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,7vw,42px);font-weight:700;
+  letter-spacing:1px;color:var(--gold-bright);line-height:1.1;position:relative}
+.header h1 span{display:block;font-size:.48em;font-weight:400;letter-spacing:4px;color:var(--gold-light);
+  text-transform:uppercase;margin-top:6px;opacity:.9}
+.gold-divider{width:80px;height:2px;background:linear-gradient(90deg,transparent,var(--gold-bright),transparent);margin:14px auto 0}
+
+/* CONTAINER */
+.container{max-width:800px;margin:0 auto;padding:20px 14px 40px}
+
+/* CARD */
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-card);
+  border:1px solid rgba(201,151,28,.15);padding:22px 20px;margin-bottom:16px}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;
+  color:var(--gold-deep);letter-spacing:.5px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.card-title::before{content:'';display:inline-block;width:4px;height:18px;
+  background:linear-gradient(180deg,var(--gold-bright),var(--gold-deep));border-radius:2px}
+
+/* MODE BUTTONS */
+.mode-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.mode-btn{border:2px solid var(--gold-rich);background:var(--white);color:var(--gold-deep);
+  font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;border-radius:var(--radius-sm);
+  padding:14px 10px;cursor:pointer;transition:all .22s;text-align:center;letter-spacing:.5px}
+.mode-btn .mode-sub{display:block;font-size:11px;font-weight:400;color:var(--text-muted);margin-top:3px}
+.mode-btn.active{background:linear-gradient(135deg,var(--dark),var(--dark-mid));color:var(--gold-bright);
+  border-color:var(--gold-bright);box-shadow:0 4px 16px rgba(139,105,20,.30)}
+.mode-btn.active .mode-sub{color:var(--gold-light);opacity:.85}
+
+/* INPUTS */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+label{font-size:12px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px}
+input,select{width:100%;padding:12px 14px;border:1.5px solid rgba(201,151,28,.30);border-radius:var(--radius-sm);
+  font-family:'DM Sans',sans-serif;font-size:15px;color:var(--dark);background:var(--cream);
+  transition:border-color .18s,box-shadow .18s;-webkit-appearance:none;appearance:none;outline:none}
+input:focus,select:focus{border-color:var(--gold-rich);box-shadow:0 0 0 3px rgba(201,151,28,.12);background:var(--white)}
+
+/* 22K RATE EDITABLE ROW */
+.rate22-wrap{display:flex;gap:8px;align-items:flex-end}
+.rate22-wrap input{flex:1}
+.auto-btn{white-space:nowrap;padding:12px 12px;background:var(--gold-pale);
+  border:1.5px solid rgba(201,151,28,.40);border-radius:var(--radius-sm);
+  font-size:12px;font-weight:600;color:var(--gold-deep);cursor:pointer;transition:all .18s}
+.auto-btn:hover{background:var(--gold-bright);color:var(--dark)}
+
+/* ITEMS */
+.item-card{background:var(--gold-pale);border:1.5px solid rgba(201,151,28,.22);
+  border-radius:var(--radius-sm);padding:14px 14px 12px;margin-bottom:10px;transition:box-shadow .2s}
+.item-card:hover{box-shadow:0 4px 24px rgba(139,105,20,.18)}
+.item-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.item-num{font-size:12px;font-weight:600;color:var(--gold-deep);text-transform:uppercase;letter-spacing:1px}
+.btn-remove{background:none;border:1.5px solid rgba(180,50,50,.3);color:#C0392B;border-radius:8px;
+  padding:4px 10px;font-size:13px;cursor:pointer;font-weight:500;transition:all .18s}
+.btn-remove:hover{background:#C0392B;color:white;border-color:#C0392B}
+.item-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px}
+.item-charges{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;
+  padding-top:8px;border-top:1px dashed rgba(201,151,28,.25)}
+
+/* BUTTONS */
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.btn-primary{background:linear-gradient(135deg,var(--dark),var(--dark-mid));color:var(--gold-bright);
+  border:none;border-radius:var(--radius-sm);padding:15px 10px;font-family:'DM Sans',sans-serif;
+  font-size:15px;font-weight:600;cursor:pointer;letter-spacing:.5px;
+  box-shadow:0 4px 14px rgba(26,18,8,.25);transition:all .2s}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(26,18,8,.30)}
+.btn-gold{background:linear-gradient(135deg,var(--gold-bright),var(--gold-rich));color:var(--dark);
+  border:none;border-radius:var(--radius-sm);padding:15px 10px;font-family:'DM Sans',sans-serif;
+  font-size:15px;font-weight:600;cursor:pointer;letter-spacing:.5px;
+  box-shadow:0 4px 14px rgba(201,151,28,.28);transition:all .2s}
+.btn-gold:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(201,151,28,.36)}
+.btn-add{width:100%;background:none;border:2px dashed var(--gold-rich);color:var(--gold-deep);
+  border-radius:var(--radius-sm);padding:13px;font-family:'DM Sans',sans-serif;font-size:14px;
+  font-weight:600;cursor:pointer;margin-top:6px;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:7px}
+.btn-add:hover{background:var(--gold-pale)}
+.btn-reset{background:none!important;border:1.5px solid rgba(139,105,20,.3)!important;
+  color:var(--text-muted)!important;box-shadow:none!important}
+.btn-reset:hover{border-color:var(--gold-deep)!important;color:var(--gold-deep)!important}
+.action-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px}
+
+/* RESULT SLIP */
+#result-section{display:none}
+.slip{background:var(--white);border:1.5px solid rgba(201,151,28,.25);border-radius:var(--radius);
+  overflow:hidden;box-shadow:0 4px 24px rgba(139,105,20,.18)}
+.slip-header{background:linear-gradient(135deg,var(--dark),var(--dark-mid));padding:22px 20px 18px;text-align:center}
+.sh-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;letter-spacing:.5px;color:var(--gold-bright)}
+.sh-sub{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-light);opacity:.85;margin-top:3px}
+.sh-divider{width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-bright),transparent);margin:12px auto 10px}
+.sh-estimate{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#FFE99A;opacity:.75}
+.slip-body{padding:18px}
+.slip-customer{background:var(--gold-pale);border-radius:var(--radius-sm);padding:12px 14px;
+  margin-bottom:16px;border-left:3px solid var(--gold-bright)}
+.sc-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--dark)}
+.sc-mob{font-size:13px;color:var(--text-muted);margin-top:2px}
+.slip-section-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;
+  color:var(--gold-deep);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid rgba(201,151,28,.20)}
+.items-table{width:100%;border-collapse:collapse;margin-bottom:16px;font-size:13.5px}
+.items-table th{text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;
+  color:var(--text-muted);padding:5px 8px;background:var(--gold-pale);border-bottom:1px solid rgba(201,151,28,.20)}
+.items-table td{padding:8px 8px;border-bottom:1px solid rgba(201,151,28,.10);color:var(--dark)}
+.items-table td.num{text-align:right}
+.calc-block{background:var(--cream);border:1px solid rgba(201,151,28,.18);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px}
+.calc-row{display:flex;justify-content:space-between;padding:5px 0;font-size:14px}
+.calc-row .cr-label{color:var(--text-muted)}
+.calc-row .cr-val{font-weight:500;color:var(--dark)}
+.calc-row.hl .cr-label{color:var(--text-body);font-weight:500}
+.calc-row.hl .cr-val{color:var(--gold-deep);font-weight:600}
+.mul-line{background:rgba(201,151,28,.10);border-radius:6px;padding:7px 10px;margin:6px 0;
+  font-size:13px;color:var(--dark-mid);text-align:center;border:1px dashed rgba(201,151,28,.28)}
+.charges-block{margin-bottom:16px}
+.charge-row{display:flex;justify-content:space-between;font-size:14px;padding:4px 0;color:var(--text-body)}
+.charge-row.deduct .cr-val{color:#27AE60}
+.total-block{background:linear-gradient(135deg,var(--dark),var(--dark-mid));border-radius:var(--radius-sm);
+  padding:16px 18px;display:flex;justify-content:space-between;align-items:center;margin-top:4px}
+.tb-label{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold-light);font-weight:600}
+.tb-val{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--gold-bright)}
+.slip-footer{text-align:center;font-size:11px;color:var(--text-muted);padding:12px 18px 16px;
+  border-top:1px solid rgba(201,151,28,.15)}
+
+/* ── SHARE MODAL ── */
+.overlay{position:fixed;inset:0;background:rgba(10,6,2,.82);z-index:1000;
+  display:flex;align-items:flex-end;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .28s}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--white);border-radius:24px 24px 0 0;width:100%;max-width:500px;
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  transform:translateY(100%);transition:transform .32s cubic-bezier(.4,0,.2,1)}
+.overlay.open .modal{transform:translateY(0)}
+@media(min-width:540px){
+  .overlay{align-items:center}
+  .modal{border-radius:24px;max-width:440px}
+}
+.modal-head{background:linear-gradient(135deg,var(--dark),var(--dark-mid));
+  border-radius:24px 24px 0 0;padding:18px 22px 14px;
+  display:flex;justify-content:space-between;align-items:center}
+@media(min-width:540px){.modal-head{border-radius:24px 24px 0 0}}
+.modal-head h3{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold-bright);font-weight:600}
+.modal-close{background:none;border:none;color:var(--gold-light);font-size:24px;
+  cursor:pointer;padding:0 2px;line-height:1;opacity:.8;transition:opacity .15s}
+.modal-close:hover{opacity:1}
+
+/* Preview strip */
+.preview-strip{padding:14px 18px 8px;display:flex;align-items:center;gap:14px}
+.preview-thumb{width:70px;height:90px;border-radius:8px;object-fit:cover;
+  box-shadow:0 3px 12px rgba(139,105,20,.25);border:1px solid rgba(201,151,28,.25);flex-shrink:0}
+.preview-info h4{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--dark)}
+.preview-info p{font-size:12px;color:var(--text-muted);margin-top:3px;line-height:1.5}
+.preview-info .grand{font-size:18px;font-weight:700;color:var(--gold-deep);
+  font-family:'Cormorant Garamond',serif;margin-top:4px}
+
+/* App grid */
+.apps-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;
+  color:var(--text-muted);padding:0 18px 8px}
+.apps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 18px 6px}
+.app-btn{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 6px 10px;
+  border-radius:16px;border:1.5px solid rgba(201,151,28,.18);background:var(--cream);
+  cursor:pointer;transition:all .2s;text-decoration:none;-webkit-tap-highlight-color:transparent}
+.app-btn:active{transform:scale(.94)}
+.app-btn:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.10)}
+.app-icon{font-size:30px;line-height:1}
+.app-name{font-size:11px;font-weight:600;color:var(--text-body);text-align:center}
+.app-btn.wa{border-color:#25D366;background:#f0fff6}.app-btn.wa .app-name{color:#075E54}
+.app-btn.tg{border-color:#29B6F6;background:#f0f9ff}.app-btn.tg .app-name{color:#0277BD}
+.app-btn.ig{border-color:#E1306C;background:#fff0f5}.app-btn.ig .app-name{color:#C13584}
+.app-btn.dl{border-color:var(--gold-rich);background:var(--gold-pale)}.app-btn.dl .app-name{color:var(--gold-deep)}
+
+.modal-hint{margin:10px 18px 18px;background:var(--gold-pale);border-radius:10px;
+  padding:11px 14px;font-size:12.5px;color:var(--text-body);line-height:1.6;text-align:center}
+.modal-hint strong{color:var(--gold-deep)}
+.modal-hint.success{background:#f0fff6;border:1px solid rgba(37,211,102,.25)}
+
+/* PRINT */
+@media print{
+  body{background:white}
+  .header,#input-section,.action-btns,.overlay{display:none!important}
+  #result-section{display:block!important}
+  .slip{box-shadow:none;border:1px solid #ccc}
+  .container{padding:0;max-width:100%}
+}
+
+/* RESPONSIVE */
+@media(max-width:540px){
+  .form-grid{grid-template-columns:1fr}
+  .item-grid{grid-template-columns:1fr 1fr}
+  .item-grid .form-group:first-child{grid-column:1/-1}
+  .btn-row{grid-template-columns:1fr}
+  .action-btns{grid-template-columns:1fr 1fr}
+  .action-btns .btn-primary:last-child{grid-column:1/-1}
+  .tb-val{font-size:22px}
+}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.animate-in{animation:fadeUp .35s ease forwards}
+
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--dark);color:var(--gold-bright);font-family:'DM Sans',sans-serif;
+  font-size:13px;font-weight:500;padding:10px 22px;border-radius:24px;
+  box-shadow:0 4px 18px rgba(0,0,0,.30);z-index:2000;opacity:0;
+  transition:all .3s;white-space:nowrap;max-width:88vw;text-align:center;pointer-events:none}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-ornament">✦ Est. Since 2005 ✦</div>
+  <h1>Sai Teja Jewellery Works<span>Fast Counter Estimate Slip</span></h1>
+  <div class="gold-divider"></div>
+</div>
+
+<div class="container">
+
+  <!-- INPUT SECTION -->
+  <div id="input-section">
+
+    <div class="card">
+      <div class="card-title">Calculation Mode</div>
+      <div class="mode-wrap">
+        <button class="mode-btn active" id="btn24k" onclick="setMode('24k')">
+          24K Calculation
+          <span class="mode-sub">Wastage 5% | Direct Rate</span>
+        </button>
+        <button class="mode-btn" id="btn22k" onclick="setMode('22k')">
+          22K Calculation
+          <span class="mode-sub">Wastage 15% | Editable Rate</span>
+        </button>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Customer Name</label>
+          <input type="text" id="custName" placeholder="e.g. Ramesh Kumar">
+        </div>
+        <div class="form-group">
+          <label>Mobile Number</label>
+          <input type="tel" id="custMob" placeholder="e.g. 9876543210" inputmode="numeric">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Items</div>
+      <div id="items-list"></div>
+      <button class="btn-add" onclick="addItem()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        Add Item
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Gold Rate & Charges</div>
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>24K Gold Rate (₹/gram)</label>
+          <input type="number" id="goldRate" placeholder="e.g. 9400" inputmode="decimal" oninput="on24kInput()">
+        </div>
+
+        <div class="form-group" id="rate22-group" style="display:none">
+          <label>22K Gold Rate (₹/gram)</label>
+          <div class="rate22-wrap">
+            <input type="number" id="rate22" placeholder="e.g. 8610" inputmode="decimal">
+            <button class="auto-btn" onclick="autoFill22k()" title="Auto = 24K × 0.916">↺ Auto</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Wastage %</label>
+          <input type="number" id="wastage" placeholder="e.g. 5" inputmode="decimal">
+        </div>
+        <div class="form-group">
+          <label>Discount (₹)</label>
+          <input type="number" id="discount" placeholder="e.g. 0" inputmode="decimal">
+        </div>
+      </div>
+      <div style="margin-top:10px;padding:9px 12px;background:var(--gold-pale);border-radius:8px;font-size:12px;color:var(--text-muted);border-left:3px solid var(--gold-bright)">
+        💡 Making Charge &amp; Stone Charge are entered per item above
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-primary" onclick="calculate()">⚖️ Calculate</button>
+      <button class="btn-primary btn-reset" onclick="resetAll()">↺ Reset</button>
+    </div>
+
+  </div><!-- /input-section -->
+
+  <!-- RESULT SECTION -->
+  <div id="result-section" class="animate-in">
+    <div class="slip" id="slip">
+      <div class="slip-header">
+        <div class="sh-name">Sai Teja Jewellery Works</div>
+        <div class="sh-sub">Hyderabad, Telangana</div>
+        <div class="sh-divider"></div>
+        <div class="sh-estimate">Estimate Slip</div>
+      </div>
+      <div class="slip-body">
+        <div class="slip-customer">
+          <div class="sc-name" id="r-custName">—</div>
+          <div class="sc-mob" id="r-custMob"></div>
+        </div>
+        <div class="slip-section-title">Items Detail</div>
+        <table class="items-table">
+          <thead><tr>
+            <th>Item</th>
+            <th class="num">Gross (g)</th>
+            <th class="num" id="th-stone">Stone (g)</th>
+            <th class="num" id="th-making">Making (₹)</th>
+            <th class="num" id="th-istone">Stone Ch. (₹)</th>
+          </tr></thead>
+          <tbody id="r-items-body"></tbody>
+          <tfoot id="r-items-foot"></tfoot>
+        </table>
+        <div class="calc-block" id="r-calc"></div>
+        <div class="charges-block" id="r-charges"></div>
+        <div class="total-block">
+          <span class="tb-label">Grand Total</span>
+          <span class="tb-val" id="r-grand">₹0</span>
+        </div>
+      </div>
+      <div class="slip-footer">Generated on <span id="r-date"></span> &nbsp;|&nbsp; Sai Teja Jewellery Works</div>
+    </div>
+
+    <div class="action-btns">
+      <button class="btn-primary" onclick="printSlip()">🖨️ Print</button>
+      <button class="btn-gold" id="btn-share" onclick="openShareModal()">📤 Share</button>
+      <button class="btn-primary" onclick="goBack()">✏️ Edit</button>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- ── SHARE MODAL ── -->
+<div class="overlay" id="share-overlay" onclick="overlayClick(event)">
+  <div class="modal" id="share-modal">
+    <div class="modal-head">
+      <h3>📤 Share Estimate Slip</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <div class="preview-strip">
+      <img id="preview-thumb" class="preview-thumb" src="" alt="Preview">
+      <div class="preview-info">
+        <h4 id="prev-name">Customer</h4>
+        <p id="prev-mob"></p>
+        <div class="grand" id="prev-total">₹0</div>
+        <p style="margin-top:4px;font-size:11px;color:var(--text-muted)">Long-press image → Save to Photos</p>
+      </div>
+    </div>
+
+    <div class="apps-label">Share via</div>
+    <div class="apps-grid">
+      <a class="app-btn wa" onclick="shareApp('wa');return false" href="#">
+        <span class="app-icon">💬</span><span class="app-name">WhatsApp</span>
+      </a>
+      <a class="app-btn tg" onclick="shareApp('tg');return false" href="#">
+        <span class="app-icon">✈️</span><span class="app-name">Telegram</span>
+      </a>
+      <a class="app-btn ig" onclick="shareApp('ig');return false" href="#">
+        <span class="app-icon">📸</span><span class="app-name">Instagram</span>
+      </a>
+      <a class="app-btn dl" onclick="shareApp('dl');return false" href="#">
+        <span class="app-icon">⬇️</span><span class="app-name">Save PNG</span>
+      </a>
+    </div>
+
+    <div class="modal-hint" id="modal-hint">
+      Save the image, then attach it inside your chosen app 📎
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let mode = '24k', itemCount = 0;
+let _dataUrl = '';
+
+// ─── MODE ────────────────────────────────────────────────────────────────────
+function setMode(m) {
+  mode = m;
+  document.getElementById('btn24k').classList.toggle('active', m==='24k');
+  document.getElementById('btn22k').classList.toggle('active', m==='22k');
+  document.getElementById('wastage').value = m==='24k' ? 5 : 15;
+  document.getElementById('rate22-group').style.display = m==='22k' ? 'block' : 'none';
+  if (m==='22k') autoFill22k();
+}
+function on24kInput() { if (mode==='22k') autoFill22k(); }
+function autoFill22k() {
+  const r = parseFloat(document.getElementById('goldRate').value)||0;
+  if (r>0) document.getElementById('rate22').value = (r*0.916).toFixed(2);
+}
+
+// ─── ITEMS ───────────────────────────────────────────────────────────────────
+function addItem() {
+  itemCount++;
+  const id = itemCount;
+  const div = document.createElement('div');
+  div.className='item-card animate-in'; div.id='item-'+id;
+  div.innerHTML=`
+    <div class="item-header">
+      <span class="item-num">Item ${id}</span>
+      <button class="btn-remove" onclick="removeItem(${id})">✕ Remove</button>
+    </div>
+    <div class="item-grid">
+      <div class="form-group"><label>Item Name</label>
+        <select id="iname-${id}">
+          <option>Ring</option><option>Chain</option><option>Necklace</option>
+          <option>Bangles</option><option>Locket</option><option>Earrings</option>
+          <option>Bracelet</option><option>Pendant</option><option value="custom">Custom Item</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Gross Wt (g)</label>
+        <input type="number" id="igross-${id}" placeholder="0.000" inputmode="decimal" step="0.001">
+      </div>
+      <div class="form-group"><label>Stone Wt (g)</label>
+        <input type="number" id="istone-${id}" placeholder="0.000" inputmode="decimal" step="0.001">
+      </div>
+    </div>
+    <div class="item-charges">
+      <div class="form-group"><label>Making Charge (₹)</label>
+        <input type="number" id="imaking-${id}" placeholder="e.g. 500" inputmode="decimal">
+      </div>
+      <div class="form-group"><label>Stone Charge (₹)</label>
+        <input type="number" id="istonech-${id}" placeholder="e.g. 0" inputmode="decimal">
+      </div>
+    </div>
+    <div id="icustom-wrap-${id}" style="display:none;margin-top:8px">
+      <div class="form-group"><label>Custom Item Name</label>
+        <input type="text" id="icustom-${id}" placeholder="Enter item name">
+      </div>
+    </div>`;
+  document.getElementById('items-list').appendChild(div);
+  document.getElementById('iname-'+id).addEventListener('change', function(){
+    document.getElementById('icustom-wrap-'+id).style.display=this.value==='custom'?'block':'none';
+  });
+}
+function removeItem(id) { const e=document.getElementById('item-'+id); if(e)e.remove(); }
+
+// ─── CALCULATE ───────────────────────────────────────────────────────────────
+function calculate() {
+  const itemEls = document.querySelectorAll('[id^="item-"]');
+  let itemData=[], grossTotal=0, stoneTotal=0;
+  itemEls.forEach(el=>{
+    const id=el.id.split('-')[1];
+    const sel=document.getElementById('iname-'+id); if(!sel)return;
+    let name=sel.value==='custom'?(document.getElementById('icustom-'+id)?.value||'Custom'):sel.value;
+    const gross=parseFloat(document.getElementById('igross-'+id)?.value)||0;
+    const stone=parseFloat(document.getElementById('istone-'+id)?.value)||0;
+    const making=parseFloat(document.getElementById('imaking-'+id)?.value)||0;
+    const stoneCh=parseFloat(document.getElementById('istonech-'+id)?.value)||0;
+    if(gross>0){itemData.push({name,gross,stone,making,stoneCh});grossTotal+=gross;stoneTotal+=stone;}
+  });
+  if(!itemData.length){alert('Please add at least one item with gross weight.');return;}
+  const r24=parseFloat(document.getElementById('goldRate').value);
+  if(!r24||r24<=0){alert('Please enter the 24K Gold Rate.');return;}
+  let activeRate;
+  if(mode==='24k'){
+    activeRate=r24;
+  } else {
+    const r22=parseFloat(document.getElementById('rate22').value);
+    if(!r22||r22<=0){alert('Please enter or auto-fill the 22K Gold Rate.');return;}
+    activeRate=r22;
+  }
+  const wastageP=parseFloat(document.getElementById('wastage').value)||0;
+  const discount=parseFloat(document.getElementById('discount').value)||0;
+  const custName=document.getElementById('custName').value.trim()||'Walk-in Customer';
+  const custMob=document.getElementById('custMob').value.trim()||'';
+
+  // Per-item totals
+  const totalMaking = itemData.reduce((s,it)=>s+it.making, 0);
+  const totalStoneCh = itemData.reduce((s,it)=>s+it.stoneCh, 0);
+
+  const netGold=grossTotal-stoneTotal;
+  const wastageWt=netGold*(wastageP/100);
+  const chargeWt=netGold+wastageWt;
+  const goldValue=chargeWt*activeRate;
+  const grandRaw=goldValue+totalMaking+totalStoneCh-discount;
+  const grandRounded=Math.round(grandRaw);
+  const hasStone=stoneTotal>0;
+  const hasMaking=totalMaking>0;
+  const hasStoneCh=totalStoneCh>0;
+
+  document.getElementById('r-custName').textContent=custName;
+  document.getElementById('r-custMob').textContent=custMob?'📱 '+custMob:'';
+  const tbody=document.getElementById('r-items-body'),tfoot=document.getElementById('r-items-foot');
+  tbody.innerHTML=tfoot.innerHTML='';
+  document.getElementById('th-stone').style.display=hasStone?'':'none';
+  document.getElementById('th-making').style.display=hasMaking?'':'none';
+  document.getElementById('th-istone').style.display=hasStoneCh?'':'none';
+
+  itemData.forEach(it=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${it.name}</td>
+      <td class="num">${it.gross.toFixed(3)}</td>
+      <td class="num" style="display:${hasStone?'':'none'}">${it.stone>0?it.stone.toFixed(3):'—'}</td>
+      <td class="num" style="display:${hasMaking?'':'none'}">${it.making>0?'₹'+fmt(it.making):'—'}</td>
+      <td class="num" style="display:${hasStoneCh?'':'none'}">${it.stoneCh>0?'₹'+fmt(it.stoneCh):'—'}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  // Totals footer
+  let tfHtml=`<tr style="border-top:2px solid rgba(201,151,28,.25);font-weight:600;color:var(--gold-deep)">
+    <td style="padding-top:8px">Total</td>
+    <td class="num" style="padding-top:8px">${grossTotal.toFixed(3)} g</td>
+    <td class="num" style="display:${hasStone?'':'none'};padding-top:8px">${hasStone?stoneTotal.toFixed(3)+' g':''}</td>
+    <td class="num" style="display:${hasMaking?'':'none'};padding-top:8px">${hasMaking?'₹'+fmt(totalMaking):''}</td>
+    <td class="num" style="display:${hasStoneCh?'':'none'};padding-top:8px">${hasStoneCh?'₹'+fmt(totalStoneCh):''}</td>
+  </tr>`;
+  tfoot.innerHTML=tfHtml;
+
+  // Calc block
+  let ch='';
+  if(hasStone){ch+=row('Gross Total',grossTotal.toFixed(3)+' g');ch+=row('Stone Weight','− '+stoneTotal.toFixed(3)+' g');}
+  ch+=row('Net Gold Weight',netGold.toFixed(3)+' g',true);
+  ch+=row(`Wastage ${wastageP}%`,'= '+wastageWt.toFixed(3)+' g');
+  ch+=row('Charge Weight',chargeWt.toFixed(3)+' g',true);
+  ch+=`<div class="mul-line">${chargeWt.toFixed(3)} g × ₹${fmt(activeRate.toFixed(2))} = ₹${fmt(goldValue.toFixed(2))}</div>`;
+  ch+=row('Gold Value','₹'+fmt(goldValue.toFixed(2)),true);
+  document.getElementById('r-calc').innerHTML=ch;
+
+  // Charges block
+  let xh='';
+  if(hasMaking) xh+=chRow('Making Charges (Total)','₹'+fmt(totalMaking));
+  if(hasStoneCh) xh+=chRow('Stone Charges (Total)','₹'+fmt(totalStoneCh));
+  if(discount>0) xh+=chRow('Discount','− ₹'+fmt(discount),true);
+  const xe=document.getElementById('r-charges');xe.innerHTML=xh;xe.style.display=xh?'block':'none';
+  document.getElementById('r-grand').textContent='₹'+fmt(grandRounded);
+  document.getElementById('r-date').textContent=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+
+  window._slip={custName,custMob,itemData,grossTotal,stoneTotal,netGold,wastageP,wastageWt,
+    chargeWt,activeRate,goldValue,totalMaking,totalStoneCh,discount,grandRounded,hasStone,hasMaking,hasStoneCh};
+  document.getElementById('input-section').style.display='none';
+  document.getElementById('result-section').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function row(l,v,hl=false){return `<div class="calc-row ${hl?'hl':''}"><span class="cr-label">${l}</span><span class="cr-val">${v}</span></div>`;}
+function chRow(l,v,d=false){return `<div class="charge-row ${d?'deduct':''}"><span>${l}</span><span class="cr-val">${v}</span></div>`;}
+function fmt(n){return Number(n).toLocaleString('en-IN');}
+
+function printSlip(){window.print();}
+function goBack(){
+  document.getElementById('result-section').style.display='none';
+  document.getElementById('input-section').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function resetAll(){
+  if(!confirm('Reset all fields?'))return;
+  ['custName','custMob','goldRate','rate22','discount'].forEach(id=>{
+    const e=document.getElementById(id);if(e)e.value='';
+  });
+  document.getElementById('items-list').innerHTML='';
+  itemCount=0; setMode('24k');
+  document.getElementById('result-section').style.display='none';
+  document.getElementById('input-section').style.display='block';
+  addItem();
+}
+
+// ─── CANVAS DRAW ─────────────────────────────────────────────────────────────
+function drawSlip(d) {
+  const W=800,PAD=44,COL=W-PAD*2;
+  const C={dark:'#1A1208',dm:'#3D2E0A',gb:'#E8B94A',gl:'#F5D97A',gp:'#FDF3D0',
+    gd:'#8B6914',cream:'#FFFDF5',w:'#FFFFFF',mu:'#7A6235',bo:'#3A2C0D',gr:'#27AE60'};
+  const HH=160,CH=76,SH=28,RH=34,CALCH=30,MULH=42,TOTH=74,FH=54,GAP=16;
+  const cRows=(d.hasStone?3:1)+2;
+  const charN=(d.totalMaking>0?1:0)+(d.totalStoneCh>0?1:0)+(d.discount>0?1:0);
+  const calcBH=cRows*CALCH+MULH+30;
+  const H=HH+GAP+CH+GAP+SH+(d.itemData.length+1)*RH+14+GAP+calcBH+GAP
+    +(charN>0?charN*CALCH+GAP:0)+TOTH+GAP+FH+PAD;
+  const cv=document.createElement('canvas');
+  cv.width=W;cv.height=Math.max(H,600);
+  const ctx=cv.getContext('2d');
+
+  function rr(x,y,w,h,r,fill,stroke,lw=1.5){
+    ctx.beginPath();ctx.moveTo(x+r,y);
+    ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);
+    ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+    ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);
+    ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);ctx.closePath();
+    if(fill){ctx.fillStyle=fill;ctx.fill();}
+    if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw;ctx.stroke();}
+  }
+  function tx(s,x,y,f,c,a='left',mw){ctx.font=f;ctx.fillStyle=c;ctx.textAlign=a;mw?ctx.fillText(s,x,y,mw):ctx.fillText(s,x,y);}
+  function hl(x1,y,x2,c,lw=1){ctx.beginPath();ctx.moveTo(x1,y);ctx.lineTo(x2,y);ctx.strokeStyle=c;ctx.lineWidth=lw;ctx.stroke();}
+  function gf(x,y,w,h,c1,c2){const g=ctx.createLinearGradient(x,y,x+w,y+h);g.addColorStop(0,c1);g.addColorStop(1,c2);ctx.fillStyle=g;ctx.fillRect(x,y,w,h);}
+
+  ctx.fillStyle=C.cream;ctx.fillRect(0,0,W,cv.height);
+  // header
+  gf(0,0,W,HH,C.dark,C.dm);
+  ctx.save();ctx.globalAlpha=.04;
+  for(let i=-HH;i<W+HH;i+=26){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i+HH,HH);ctx.strokeStyle=C.gb;ctx.lineWidth=1;ctx.stroke();}
+  ctx.restore();
+  tx('✦  Est. Since 2005  ✦',W/2,30,'500 11px sans-serif',C.gl,'center');
+  tx('Sai Teja Jewellery Works',W/2,80,'bold 36px serif',C.gb,'center');
+  tx('HYDERABAD, TELANGANA',W/2,100,'400 11px sans-serif',C.gl,'center');
+  const dg=ctx.createLinearGradient(W/2-60,0,W/2+60,0);
+  dg.addColorStop(0,'transparent');dg.addColorStop(.5,C.gb);dg.addColorStop(1,'transparent');
+  ctx.fillStyle=dg;ctx.fillRect(W/2-60,112,120,1.5);
+  tx('ESTIMATE SLIP',W/2,132,'400 11px sans-serif',C.gl,'center');
+  const ds=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+  tx(ds,W/2,152,'400 11px sans-serif',C.mu,'center');
+
+  let y=HH+GAP;
+  // customer
+  rr(PAD,y,COL,CH,10,C.w,'rgba(201,151,28,.20)');
+  rr(PAD,y,4,CH,2,C.gb);
+  tx(d.custName,PAD+20,y+30,'bold 20px serif',C.dark);
+  if(d.custMob) tx('📱 '+d.custMob,PAD+20,y+56,'400 14px sans-serif',C.mu);
+  y+=CH+GAP;
+
+  // items section label
+  tx('ITEMS DETAIL',PAD,y+20,'600 11px sans-serif',C.gd);y+=SH;
+
+  // Dynamic column layout based on what data exists
+  // Columns: Item | Gross | [Stone] | [Making] | [StoneCh]
+  let colDefs=[]; // {label, xRight, width}
+  const hasS=d.hasStone, hasM=d.hasMaking, hasSC=d.hasStoneCh;
+  // Calculate column widths
+  let itemW=COL*.38;
+  let remW=COL-itemW;
+  const numCols=(1)+(hasS?1:0)+(hasM?1:0)+(hasSC?1:0); // excluding item name
+  const colW=remW/numCols;
+  colDefs.push({label:'Item',x:PAD+10,xR:PAD+itemW-4,isRight:false});
+  let cx=PAD+itemW;
+  colDefs.push({label:'Gross (g)',x:cx,xR:cx+colW-4,isRight:true});cx+=colW;
+  if(hasS){colDefs.push({label:'Stone (g)',x:cx,xR:cx+colW-4,isRight:true});cx+=colW;}
+  if(hasM){colDefs.push({label:'Making (₹)',x:cx,xR:cx+colW-4,isRight:true});cx+=colW;}
+  if(hasSC){colDefs.push({label:'Stone Ch.(₹)',x:cx,xR:cx+colW-4,isRight:true});}
+
+  // table header row
+  rr(PAD,y,COL,32,6,C.gp,null);
+  colDefs.forEach(c=>{
+    tx(c.label,c.isRight?c.xR:c.x,y+21,'600 11px sans-serif',C.mu,c.isRight?'right':'left');
+  });
+  y+=32;
+
+  // item rows
+  d.itemData.forEach((it,i)=>{
+    if(i%2===0){ctx.fillStyle='rgba(201,151,28,.04)';ctx.fillRect(PAD,y,COL,RH);}
+    hl(PAD,y+RH-1,PAD+COL,'rgba(201,151,28,.10)');
+    // item name col
+    tx(it.name,PAD+10,y+23,'400 14px sans-serif',C.bo,'left',itemW-14);
+    let ci=1;
+    tx(it.gross.toFixed(3),colDefs[ci].xR,y+23,'400 14px sans-serif',C.bo,'right');ci++;
+    if(hasS){tx(it.stone>0?it.stone.toFixed(3):'—',colDefs[ci].xR,y+23,'400 14px sans-serif',C.bo,'right');ci++;}
+    if(hasM){tx(it.making>0?'₹'+fmt(it.making):'—',colDefs[ci].xR,y+23,'400 14px sans-serif',it.making>0?C.gd:C.mu,'right');ci++;}
+    if(hasSC){tx(it.stoneCh>0?'₹'+fmt(it.stoneCh):'—',colDefs[ci].xR,y+23,'400 14px sans-serif',it.stoneCh>0?C.gd:C.mu,'right');}
+    y+=RH;
+  });
+
+  // totals row
+  ctx.fillStyle='rgba(201,151,28,.08)';ctx.fillRect(PAD,y,COL,RH);
+  hl(PAD,y,PAD+COL,'rgba(201,151,28,.30)',2);
+  tx('Total',PAD+10,y+23,'600 14px sans-serif',C.gd);
+  let ti=1;
+  tx(d.grossTotal.toFixed(3)+' g',colDefs[ti].xR,y+23,'600 14px sans-serif',C.gd,'right');ti++;
+  if(hasS){tx(d.stoneTotal.toFixed(3)+' g',colDefs[ti].xR,y+23,'600 14px sans-serif',C.gd,'right');ti++;}
+  if(hasM){tx('₹'+fmt(d.totalMaking),colDefs[ti].xR,y+23,'600 14px sans-serif',C.gd,'right');ti++;}
+  if(hasSC){tx('₹'+fmt(d.totalStoneCh),colDefs[ti].xR,y+23,'600 14px sans-serif',C.gd,'right');}
+  y+=RH+GAP;
+
+  // calc block
+  rr(PAD,y,COL,calcBH,10,C.cream,'rgba(201,151,28,.18)');y+=14;
+  function cr(lb,vl,hi=false){
+    const lc=hi?C.gd:C.mu,vc=hi?C.gd:C.bo,fw=hi?'600':'400';
+    tx(lb,PAD+16,y+20,fw+' 13.5px sans-serif',lc);
+    tx(vl,PAD+COL-16,y+20,fw+' 13.5px sans-serif',vc,'right');
+    if(hi) hl(PAD+14,y+27,PAD+COL-14,'rgba(201,151,28,.15)');
+    y+=CALCH;
+  }
+  function mr(s){
+    rr(PAD+14,y,COL-28,MULH-6,6,'rgba(201,151,28,.10)','rgba(201,151,28,.30)');
+    tx(s,PAD+14+(COL-28)/2,y+22,'400 13px sans-serif',C.dm,'center');y+=MULH;
+  }
+  if(d.hasStone){cr('Gross Total',d.grossTotal.toFixed(3)+' g');cr('Stone Weight','− '+d.stoneTotal.toFixed(3)+' g');}
+  cr('Net Gold Weight',d.netGold.toFixed(3)+' g',true);
+  cr(`Wastage ${d.wastageP}%`,'= '+d.wastageWt.toFixed(3)+' g');
+  cr('Charge Weight',d.chargeWt.toFixed(3)+' g',true);
+  mr(`${d.chargeWt.toFixed(3)} g  ×  ₹${fmt(d.activeRate.toFixed(2))}  =  ₹${fmt(d.goldValue.toFixed(2))}`);
+  cr('Gold Value','₹'+fmt(d.goldValue.toFixed(2)),true);
+  y+=8;
+
+  // charges summary
+  if(charN>0){
+    y+=GAP/2;
+    if(d.totalMaking>0){tx('Making Charges (Total)',PAD+16,y+20,'400 14px sans-serif',C.bo);tx('₹'+fmt(d.totalMaking),PAD+COL-16,y+20,'400 14px sans-serif',C.bo,'right');y+=CALCH;}
+    if(d.totalStoneCh>0){tx('Stone Charges (Total)',PAD+16,y+20,'400 14px sans-serif',C.bo);tx('₹'+fmt(d.totalStoneCh),PAD+COL-16,y+20,'400 14px sans-serif',C.bo,'right');y+=CALCH;}
+    if(d.discount>0){tx('Discount',PAD+16,y+20,'400 14px sans-serif',C.bo);tx('− ₹'+fmt(d.discount),PAD+COL-16,y+20,'400 14px sans-serif',C.gr,'right');y+=CALCH;}
+  }
+  y+=GAP;
+
+  // grand total box
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(PAD+12,y);ctx.lineTo(PAD+COL-12,y);ctx.arcTo(PAD+COL,y,PAD+COL,y+12,12);
+  ctx.lineTo(PAD+COL,y+TOTH-12);ctx.arcTo(PAD+COL,y+TOTH,PAD+COL-12,y+TOTH,12);
+  ctx.lineTo(PAD+12,y+TOTH);ctx.arcTo(PAD,y+TOTH,PAD,y+TOTH-12,12);
+  ctx.lineTo(PAD,y+12);ctx.arcTo(PAD,y,PAD+12,y,12);ctx.closePath();ctx.clip();
+  gf(PAD,y,COL,TOTH,C.dark,C.dm);ctx.restore();
+  rr(PAD,y,COL,TOTH,12,null,C.gb,1.5);
+  tx('Grand Total',PAD+22,y+44,'600 18px serif',C.gl);
+  tx('₹'+fmt(d.grandRounded),PAD+COL-22,y+48,'bold 30px serif',C.gb,'right');
+  y+=TOTH+GAP;
+
+  // footer
+  hl(PAD,y,PAD+COL,'rgba(201,151,28,.20)');
+  tx('Sai Teja Jewellery Works  •  '+ds,W/2,y+28,'400 11px sans-serif',C.mu,'center');
+  tx('This is a computer generated estimate slip',W/2,y+46,'400 10px sans-serif','rgba(122,98,53,.55)','center');
+
+  return cv.toDataURL('image/png');
+}
+
+// ─── SHARE MODAL ─────────────────────────────────────────────────────────────
+function openShareModal(){
+  const d=window._slip; if(!d)return;
+  const btn=document.getElementById('btn-share');
+  btn.textContent='⏳ Generating…'; btn.disabled=true;
+  setTimeout(()=>{
+    try{
+      _dataUrl=drawSlip(d);
+      // preview
+      document.getElementById('preview-thumb').src=_dataUrl;
+      document.getElementById('prev-name').textContent=d.custName;
+      document.getElementById('prev-mob').textContent=d.custMob?'📱 '+d.custMob:'';
+      document.getElementById('prev-total').textContent='₹'+fmt(d.grandRounded);
+      // hint default
+      setHint('Tap an app to share • Save PNG saves to your device first');
+      document.getElementById('share-overlay').classList.add('open');
+    }catch(e){console.error(e);toast('Image generation failed.');}
+    btn.textContent='📤 Share'; btn.disabled=false;
+  },60);
+}
+function closeModal(){document.getElementById('share-overlay').classList.remove('open');}
+function overlayClick(e){if(e.target===document.getElementById('share-overlay'))closeModal();}
+
+function setHint(msg,success=false){
+  const el=document.getElementById('modal-hint');
+  el.innerHTML=msg; el.className='modal-hint'+(success?' success':'');
+}
+
+// ─── SHARE TO APP ────────────────────────────────────────────────────────────
+async function shareApp(app){
+  if(!_dataUrl)return;
+  const d=window._slip;
+  const name=d?d.custName:'Customer';
+  const cap=`Estimate slip for *${name}*\nGrand Total: ₹${fmt(d.grandRounded)}\nFrom Sai Teja Jewellery Works`;
+
+  // Try native Web Share API with file (Android Chrome / iOS Safari on HTTPS)
+  try{
+    const blob=await toBlob(_dataUrl);
+    const file=new File([blob],`estimate_${name.replace(/\s+/g,'_')}.png`,{type:'image/png'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){
+      await navigator.share({files:[file],title:'Estimate – Sai Teja Jewellery',text:cap});
+      setHint('✅ Shared successfully!',true);
+      return;
+    }
+  }catch(e){/* cancelled or unsupported, fall through */}
+
+  // Fallback: save image + open app
+  saveImg(_dataUrl,`estimate_${name.replace(/\s+/g,'_')}.png`);
+
+  const msgs = {
+    wa:`https://wa.me/?text=${encodeURIComponent(cap)}`,
+    tg:`https://t.me/share/url?url=${encodeURIComponent('Estimate Slip')}&text=${encodeURIComponent(cap)}`,
+    ig:`https://www.instagram.com/`,
+    dl:null
+  };
+
+  const appSteps={
+    wa:'<strong>Step 1:</strong> Image saved ✅<br><strong>Step 2:</strong> In WhatsApp → open chat → 📎 Attach → Gallery → pick the image',
+    tg:'<strong>Step 1:</strong> Image saved ✅<br><strong>Step 2:</strong> In Telegram → open chat → 📎 → Gallery → pick the image',
+    ig:'<strong>Step 1:</strong> Image saved ✅<br><strong>Step 2:</strong> Open Instagram → ＋ New Post or Story → pick the image from Gallery',
+    dl:'✅ Image saved to your device! Open from Gallery and share via any app.'
+  };
+  setHint(appSteps[app]||'',true);
+
+  if(app!=='dl'&&msgs[app]){
+    setTimeout(()=>window.open(msgs[app],'_blank'),700);
+  }
+}
+
+function toBlob(dataUrl){
+  return new Promise(res=>{
+    const arr=dataUrl.split(','),mime=arr[0].match(/:(.*?);/)[1];
+    const b=atob(arr[1]);let n=b.length,u=new Uint8Array(n);
+    while(n--)u[n]=b.charCodeAt(n);
+    res(new Blob([u],{type:mime}));
+  });
+}
+function saveImg(dataUrl,fname){
+  const a=document.createElement('a');a.href=dataUrl;a.download=fname;a.click();
+}
+
+// ─── TOAST ───────────────────────────────────────────────────────────────────
+function toast(msg){
+  const e=document.getElementById('toast');e.textContent=msg;e.classList.add('show');
+  setTimeout(()=>e.classList.remove('show'),3200);
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+setMode('24k');
+addItem();
+</script>
+</body>
+</html>
